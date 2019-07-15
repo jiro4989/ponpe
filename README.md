@@ -1,8 +1,12 @@
-# dotfiles
+# scripts
 
-設定ファイルと環境構築スクリプトを管理する。
+自分用のスクリプト置き場。大多数はbashで書かれている。
 
-## 環境構築
+## Scripts
 
-[setupリポジトリ](https://github.com/jiro4989/setup)のREADMEを参照する。
+TODO
+
+## Install
+
+TODO
 
