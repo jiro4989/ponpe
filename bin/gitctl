@@ -22,6 +22,17 @@ new_feature_branch() {
   git checkout -b "$branch"
 }
 
+# 新規ブランチを作成する。
+new_hotfix_branch() {
+  echo "Input new branch name"
+  local branch_name
+  read -p "? hotfix/" branch_name
+
+  local branch="hotfix/$branch_name"
+  echo Execute: git checkout -b "$branch"
+  git checkout -b "$branch"
+}
+
 # 現在のブランチをremoteリポジトリにpushする。
 push_current_branch_as_upstream() {
   local current_branch=$(git symbolic-ref --short HEAD)
@@ -32,6 +43,7 @@ push_current_branch_as_upstream() {
 # ここに関数名とその説明を書く。''関数名:''という命名でないといけない。
 cmd=$(for cmd in \
   "new_feature_branch:               ローカルリポジトリに新規にfeatureブランチを作成する" \
+  "new_hotfix_branch:                ローカルリポジトリに新規にhotfixブランチを作成する" \
   "push_current_branch_as_upstream:  現在のブランチ名でupstreamとしてブランチをpushする"
 do
   echo "$cmd"
