@@ -40,11 +40,18 @@ push_current_branch_as_upstream() {
   git push --set-upstream origin "$current_branch"
 }
 
+# URLをSSH用に変更する。
+set_ssh_url() {
+  local remote=$(git remote -v | head -n 1 | awk '{print $2}' | sed 's,https://github.com/,git@github.com:,')
+  git remote set-url origin "$remote"
+}
+
 # ここに関数名とその説明を書く。''関数名:''という命名でないといけない。
 cmd=$(for cmd in \
   "new_feature_branch:               ローカルリポジトリに新規にfeatureブランチを作成する" \
   "new_hotfix_branch:                ローカルリポジトリに新規にhotfixブランチを作成する" \
-  "push_current_branch_as_upstream:  現在のブランチ名でupstreamとしてブランチをpushする"
+  "push_current_branch_as_upstream:  現在のブランチ名でupstreamとしてブランチをpushする" \
+  "set_ssh_url:                      URLをSSH用に変更する"
 do
   echo "$cmd"
 done | peco)
