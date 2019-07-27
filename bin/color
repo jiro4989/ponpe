@@ -3,6 +3,10 @@
 set -eu
 
 readonly SCRIPT_NAME=$(basename $0)
+readonly VERSION="$SCRIPT_NAME version 1.0.0
+Copyright (c) 2019 jiro4989
+Released under the MIT License.
+https://github.com/jiro4989/scripts"
 
 color_1() {
   local prefix=$1
@@ -52,6 +56,7 @@ $SCRIPT_NAME はLinuxターミナルの色を出力する。
 Usage:
     $SCRIPT_NAME (1f | 1b | 256f | 256b)...
     $SCRIPT_NAME (-h | --help)
+    $SCRIPT_NAME (-v | --version)
 
 Options:
     -h, --help    このヘルプを出力する
@@ -65,6 +70,10 @@ while (( 0 < $# )); do
   case "$opt" in
     -h|--help)
       usage
+      exit
+      ;;
+    -v|--version)
+      echo -e "$VERSION"
       exit
       ;;
     1f|1b|256f|256b)
