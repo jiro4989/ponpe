@@ -3,21 +3,58 @@
 set -eu
 
 readonly SCRIPT_NAME=$(basename $0)
+readonly VERSION="$SCRIPT_NAME version 1.0.0
+Copyright (c) 2019 jiro4989
+Released under the MIT License.
+https://github.com/jiro4989/scripts"
+
+color_format() {
+  local format=$1
+  local r=$2
+  local g=$3
+  local b=$4
+  local text=$5
+
+  case "$format" in
+    json)
+      echo '{"red":'"$r"', "green":'"$g"', "blue":'"$b"'}'
+      ;;
+    css)
+      echo "rgba($r, $g, $b, 0.1);"
+      ;;
+    ansi_foreground|ansi_f)
+      echo -e "\x1b[38;2;$r;$g;${b}m$text\x1b[m"
+      ;;
+    ansi_background|ansi_b)
+      echo -e "\x1b[48;2;$r;$g;${b}m$text\x1b[m"
+      ;;
+    text)
+      echo "Red = $r, Green = $g, Blue = $b"
+      ;;
+    *)
+      echo "[ERR] 不正な書式です。(format = $format)" >&2
+      return 1
+      ;;
+  esac
+}
 
 gradation() {
   local span=$1
-  local r1=$2
-  local g1=$3
-  local b1=$4
-  local r2=$5
-  local g2=$6
-  local b2=$7
+  local format=$2
+  local r1=$3
+  local g1=$4
+  local b1=$5
+  local r2=$6
+  local g2=$7
+  local b2=$8
+  local text=$9
 
   local r_diff=$(( (r2 - r1) / span))
   local g_diff=$(( (g2 - g1) / span))
   local b_diff=$(( (b2 - b1) / span))
+
   for ((i=0; i<$span; i++)); do
-    echo "rgba($((r1 + i * r_diff)), $((g1 + i * g_diff)), $((b1 + i * b_diff)), 0.1)"
+    color_format $format $((r1 + i * r_diff)) $((g1 + i * g_diff)) $((b1 + i * b_diff)) "$text"
   done
 }
 
@@ -34,27 +71,77 @@ Description:
   よって、色と色の間隔が狭い、滑らかな虹色になる。
 
 Usage:
-  $SCRIPT_NAME number
+  $SCRIPT_NAME [options] [number]
   $SCRIPT_NAME [-h | --help]
+  $SCRIPT_NAME [-v | --version]
 
 Options:
-    -h, --help    このヘルプを出力する
+    -h, --help             このヘルプを出力する
+    -v, --version          バージョン情報を出力する
+    -f, --format string    出力フォーマットを指定
+                           (json | css | ansi_foreground (ansi_f) | ansi_background
+                           (ansi_b) | text) [default: text]
+    -t, --text string      ansi_foregroundかansi_backgroundの時に出力するテキスト
 EOS
 }
 
-span=$1
+span=5
+text=""
+format=text
+while ((0 < $#)); do
+  opt=$1
+  shift
+  case $opt in
+    -h|--help)
+      usage
+      exit
+      ;;
+    -v|--version)
+      echo -e "$VERSION"
+      exit
+      ;;
+    -f|--format)
+      format=$1
+      shift
+      ;;
+    -t|--text)
+      text=$1
+      shift
+      ;;
+    *)
+      span=$opt
+      ;;
+  esac
+done
 
-case $span in
-  -h|--help)
-    usage
-    exit
-    ;;
-esac
+if [[ ! "$span" =~ ^[0-9]+$ ]]; then
+  echo "[ERR] 虹色の間隔を指定する引数は数値が必須です。 (number = $span)" >&2
+  usage
+  exit 1
+fi
 
-gradation $span 255 0 0 255 69 0
-gradation $span 255 69 0 255 255 0
-gradation $span 255 255 0 0 128 0
-gradation $span 0 128 0 0 0 255
-gradation $span 0 0 255 75 0 130
-gradation $span 75 0 130 238 130 238
-gradation $span 238 130 238 255 0 0
+if [ "$format" = json ]; then
+  echo "["
+fi
+(
+  gradation $span $format 255 0 0 255 69 0 "$text"
+  gradation $span $format 255 69 0 255 255 0 "$text"
+  gradation $span $format 255 255 0 0 128 0 "$text"
+  gradation $span $format 0 128 0 0 0 255 "$text"
+  gradation $span $format 0 0 255 75 0 130 "$text"
+  gradation $span $format 75 0 130 238 130 238 "$text"
+  gradation $span $format 238 130 238 255 0 0 "$text"
+) | awk -v format=$format '
+    { array[NR] = $0 }
+    END{
+      for (i in array) {
+        if (format == "json" && i != NR) {
+          print array[i] ","
+        } else {
+          print array[i]
+        }
+      }
+    }'
+if [ "$format" = json ]; then
+  echo "]"
+fi
