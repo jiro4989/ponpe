@@ -50,7 +50,7 @@ usage() {
 $SCRIPT_NAME はLinuxターミナルの色を出力する。
 
 Usage:
-    $SCRIPT_NAME (1f | 1b | 256f | 256b)
+    $SCRIPT_NAME (1f | 1b | 256f | 256b)...
     $SCRIPT_NAME (-h | --help)
 
 Options:
@@ -58,6 +58,7 @@ Options:
 EOS
 }
 
+cnt=0
 while (( 0 < $# )); do
   opt=$1
   shift
@@ -68,6 +69,7 @@ while (( 0 < $# )); do
       ;;
     1f|1b|256f|256b)
       $opt
+      cnt=$((cnt+1))
       ;;
     *)
       usage
@@ -75,3 +77,10 @@ while (( 0 < $# )); do
       ;;
   esac
 done
+
+if [ "$cnt" -lt 1 ]; then
+  echo "[ERR] 引数は必須です" >&2
+  echo
+  usage
+  exit 1
+fi
