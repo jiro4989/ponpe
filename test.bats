@@ -82,3 +82,10 @@
   run bash -c "rainbow text"
   [ "$status" -ne 0 ]
 }
+
+@test "vp" {
+  run bash -c "vp -h"
+  [ "$status" -eq 0 ]
+  run bash -c "vp -v"
+  [ "$status" -eq 0 ]
+}

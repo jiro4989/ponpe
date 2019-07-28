@@ -3,6 +3,10 @@
 set -eu
 
 readonly SCRIPT_NAME=$(basename $0)
+readonly VERSION="$SCRIPT_NAME version 1.0.0
+Copyright (c) 2019 jiro4989
+Released under the MIT License.
+https://github.com/jiro4989/scripts"
 
 main() {
   local args=()
@@ -12,7 +16,11 @@ main() {
     case "$opt" in
       -h|--help)
         usage
-        exit
+        return
+        ;;
+      -v|--version)
+        echo -e "$VERSION"
+        return
         ;;
       *)
         args+=($opt)
@@ -37,7 +45,8 @@ Usage:
     $SCRIPT_NAME [options] plugin_name CommandName function_name
 
 Options:
-    -h, --help    このヘルプを出力する
+    -h, --help       このヘルプを出力する
+    -v, --version    バージョン情報を出力する
 EOS
 }
 
