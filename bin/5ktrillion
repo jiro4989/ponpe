@@ -112,7 +112,7 @@ usage() {
 $SCRIPT_NAME は5000兆円欲しい人のための5000兆円のスクリプトです。
 
 Usage:
-    $SCRIPT_NAME [yen ...]
+    $SCRIPT_NAME [options] [yen ...]
     $SCRIPT_NAME (-h | --help)
     $SCRIPT_NAME (-v | --version)
 
