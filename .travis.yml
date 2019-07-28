@@ -1,0 +1,30 @@
+language: bash
+
+matrix:
+  include:
+    - os: linux
+      env: SH_VERSION=3.2
+    - os: linux
+      env: SH_VERSION=4.0
+    - os: linux
+      env: SH_VERSION=4.1
+    - os: linux
+      env: SH_VERSION=4.2
+    - os: linux
+      env: SH_VERSION=4.3
+    - os: linux
+      env: SH_VERSION=4.4
+    - os: linux
+      env: SH_VERSION=5.0
+
+before_install:
+  - sudo add-apt-repository ppa:duggan/bats --yes
+  - sudo apt-get update -qq
+
+install:
+  - sudo apt-get install -qq bats
+  - sudo ./install.sh
+
+script:
+  - /bin/bash --version
+  - ./test.bats
