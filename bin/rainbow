@@ -23,10 +23,10 @@ color_format() {
       echo "rgba($r, $g, $b, 0.1);"
       ;;
     ansi_foreground|ansi_f)
-      echo -e "\x1b[38;2;$r;$g;${b}m$text\x1b[m"
+      echo -e "$text" | sed -E "s@.*@\x1b[38;2;$r;$g;${b}m&\x1b[m@g"
       ;;
     ansi_background|ansi_b)
-      echo -e "\x1b[48;2;$r;$g;${b}m$text\x1b[m"
+      echo -e "$text" | sed -E "s@.*@\x1b[48;2;$r;$g;${b}m&\x1b[m@g"
       ;;
     text)
       echo "Red = $r, Green = $g, Blue = $b"
@@ -82,6 +82,8 @@ Options:
                            (json | css | ansi_foreground (ansi_f) | ansi_background
                            (ansi_b) | text) [default: text]
     -t, --text string      ansi_foregroundかansi_backgroundの時に出力するテキスト
+    -i, --stdin string     ansi_foregroundかansi_backgroundの時に出力するテキスト
+                           を標準入力から受け取る
 EOS
 }
 
@@ -107,6 +109,9 @@ while ((0 < $#)); do
     -t|--text)
       text=$1
       shift
+      ;;
+    -i|--stdin)
+      text="$(cat)"
       ;;
     *)
       span=$opt
