@@ -13,6 +13,7 @@
 |mp42gif|ffmpegのラッパーで対話式
 |rainbow|虹色を様々な書式で出力する
 |vp|VimPluginリポジトリの雛形を作成する
+|5ktrillion|「5000兆円ほしい」を出力する
 |=================
 
 == Install
