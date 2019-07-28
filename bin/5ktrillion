@@ -1,0 +1,133 @@
+#!/bin/bash
+
+set -eu
+
+readonly SCRIPT_NAME=$(basename $0)
+readonly VERSION="$SCRIPT_NAME version 1.0.0
+Copyright (c) 2019 jiro4989
+Released under the MIT License.
+https://github.com/jiro4989/scripts"
+
+readonly TIME_LIST=(秒 分 時 日 月 年)
+readonly UNIT_LIST=(万 億 兆 京 垓 秭 𥝱 穣 溝 澗 正 載 極 恒河沙 阿僧祇 那由他 不可思議 無量大数)
+
+main() {
+  local no_time=false
+  local full_yen=false
+  local gift=false
+  local unit=円
+  local yen=()
+  while (( 0 < $# )); do
+    local opt=$1
+    shift
+    case "$opt" in
+      -h|--help)
+        usage
+        return
+        ;;
+      -v|--version)
+        echo -e "$VERSION"
+        return
+        ;;
+      -n|--no-time)
+        no_time=true
+        ;;
+      -f|--full-yen)
+        full_yen=true
+        ;;
+      -g|--gift)
+        gift=true
+        ;;
+      -u|--unit)
+        unit=$1
+        shift
+        ;;
+      *)
+        yen+=($opt)
+        ;;
+    esac
+  done
+
+  # お金の指定がなければ5
+  if [ ${#yen[@]} -lt 1 ]; then
+    yen+=(5)
+  fi
+
+  for y in ${yen[@]}; do
+    print_trillion $y $no_time $full_yen $gift $unit
+  done
+}
+
+print_trillion() {
+  local yen=$1
+  local no_time=$2
+  local full_yen=$3
+  local gift=$4
+  local unit=$5
+
+  local t=$(shuf -en1 ${TIME_LIST[@]})
+  local u=$(shuf -en1 ${UNIT_LIST[@]})
+
+  local text=$(shuf -en1 ${t}給${yen}{,0}{,0}{,0}${u}円欲しい！)
+
+  # 時間給の出力を消す
+  if [ $no_time = true ]; then
+    text=$(echo $text | sed -E 's/^.*給//')
+  fi
+
+  # 単位を0に置換
+  if [ $full_yen = true ]; then
+    text=$(echo $text | sed \
+      -e 's/万/0000/' \
+      -e 's/億/00000000/' \
+      -e 's/兆/000000000000/' \
+      -e 's/京/0000000000000000/' \
+      -e 's/垓/00000000000000000000/' \
+      -e 's/秭/000000000000000000000000/' \
+      -e 's/𥝱/0000000000000000000000000000/' \
+      -e 's/穣/00000000000000000000000000000000/' \
+      -e 's/溝/000000000000000000000000000000000000/' \
+      -e 's/澗/0000000000000000000000000000000000000000/' \
+      -e 's/正/00000000000000000000000000000000000000000000/' \
+      -e 's/載/000000000000000000000000000000000000000000000000/' \
+      -e 's/極/0000000000000000000000000000000000000000000000000000/' \
+      -e 's/恒河沙/00000000000000000000000000000000000000000000000000000000/' \
+      -e 's/阿僧祇/000000000000000000000000000000000000000000000000000000000000/' \
+      -e 's/那由他/0000000000000000000000000000000000000000000000000000000000000000/' \
+      -e 's/不可思議/00000000000000000000000000000000000000000000000000000000000000000000/' \
+      -e 's/無量大数/000000000000000000000000000000000000000000000000000000000000000000000000/' \
+      )
+  fi
+
+  # なんと、プレゼントしてしまう
+  if [ $gift = true ]; then
+    text=$(echo $text | sed -E 's/欲しい/あげる/')
+  fi
+
+  echo $text | sed 's/円/'"$unit"'/g'
+}
+
+usage() {
+  cat << EOS
+$SCRIPT_NAME は5000兆円欲しい人のための5000兆円のスクリプトです。
+
+Usage:
+    $SCRIPT_NAME [yen ...]
+    $SCRIPT_NAME (-h | --help)
+    $SCRIPT_NAME (-v | --version)
+
+Unit:
+    出現する時間の単位    ${TIME_LIST[@]}
+    出現するお金の単位    ${UNIT_LIST[@]}
+
+Options:
+    -h, --help         このヘルプを出力する
+    -v, --version      バージョン情報を出力する
+    -n, --no-time      時間給の出力を消す
+    -f, --full-yen     単位を0に置き換える
+    -g, --gift         なんと、プレゼントしてしまう
+    -u, --unit UNIT    円を独自の単位に変更する
+EOS
+}
+
+main ${1+"$@"}
