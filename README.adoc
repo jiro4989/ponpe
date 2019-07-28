@@ -1,6 +1,8 @@
 = scripts
+image:https://travis-ci.org/jiro4989/scripts.svg?branch=master["Build Status", link="https://travis-ci.org/jiro4989/scripts"]
 
-自分用のスクリプト置き場。大多数はbashで書かれている。
+次郎の自分用スクリプト置き場。
+全部bashで書かれている。
 
 == Scripts
 
