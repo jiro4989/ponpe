@@ -3,22 +3,31 @@
 @test "5ktrillion" {
   run bash -c "5ktrillion"
   [ "$status" -eq 0 ]
+
   run bash -c "5ktrillion -h"
   [ "$status" -eq 0 ]
+
   run bash -c "5ktrillion -v"
   [ "$status" -eq 0 ]
+
   run bash -c "5ktrillion -n"
   [ "$status" -eq 0 ]
+
   run bash -c "5ktrillion -t"
   [ "$status" -eq 0 ]
+
   run bash -c "5ktrillion -g"
   [ "$status" -eq 0 ]
+
   run bash -c "5ktrillion -u ドル"
   [ "$status" -eq 0 ]
+
   run bash -c "5ktrillion 1 2 3 4 5"
   [ "$status" -eq 0 ]
+
   run bash -c "5ktrillion -n -t -g -u ドル 1 2 3 4 5"
   [ "$status" -eq 0 ]
+
   run bash -c "5ktrillion -x"
   [ "$status" -eq 0 ]
 }
@@ -27,10 +36,13 @@
   run bash -c "color 1f"
   [ "$output" = '[30m  \x1b[30m  [m[31m  \x1b[31m  [m[32m  \x1b[32m  [m[33m  \x1b[33m  [m[34m  \x1b[34m  [m[35m  \x1b[35m  [m[36m  \x1b[36m  [m[37m  \x1b[37m  [m' ]
   [ "$status" -eq 0 ]
+
   run bash -c "color 1b"
   [ "$status" -eq 0 ]
+
   run bash -c "color 256f"
   [ "$status" -eq 0 ]
+
   run bash -c "color 256b"
   [ "$status" -eq 0 ]
 
@@ -86,6 +98,40 @@
 @test "vp" {
   run bash -c "vp -h"
   [ "$status" -eq 0 ]
+
   run bash -c "vp -v"
   [ "$status" -eq 0 ]
+}
+
+@test "5ktrillion" {
+  run bash -c "5ktrillion"
+  [ "$status" -eq 0 ]
+
+  run bash -c "5ktrillion -h"
+  [ "$status" -eq 0 ]
+
+  run bash -c "5ktrillion -v"
+  [ "$status" -eq 0 ]
+
+  run bash -c "5ktrillion -n -f -g -u ジンバブエドル"
+  [ "$status" -eq 0 ]
+
+  run bash -c "5ktrillion -5"
+  [ "$output" = "5000兆円欲しい！" ]
+  [ "$status" -eq 0 ]
+
+  run bash -c "5ktrillion -5 1"
+  [ "$output" = "5000兆円欲しい！" ]
+  [ "$status" -eq 0 ]
+
+  run bash -c "5ktrillion -5 -n -f -g -u ジンバブエドル 1"
+  [ "$output" = "5000兆円欲しい！" ]
+  [ "$status" -eq 0 ]
+
+  run bash -c "5ktrillion --5000-cho-yen-hosii"
+  [ "$output" = "5000兆円欲しい！" ]
+  [ "$status" -eq 0 ]
+
+  run bash -c "5ktrillion -x"
+  [ "$status" -ne 0 ]
 }
