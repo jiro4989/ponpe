@@ -3,7 +3,7 @@
 set -eu
 
 readonly SCRIPT_NAME=$(basename $0)
-readonly VERSION="$SCRIPT_NAME version 1.0.0
+readonly VERSION="$SCRIPT_NAME version 1.1.0
 Copyright (c) 2019 jiro4989
 Released under the MIT License.
 https://github.com/jiro4989/scripts"
@@ -16,6 +16,7 @@ main() {
   local full_yen=false
   local gift=false
   local unit=円
+  local hosii=false
   local yen=()
   while (( 0 < $# )); do
     local opt=$1
@@ -42,6 +43,9 @@ main() {
         unit=$1
         shift
         ;;
+      -5|--5000-cho-yen-hosii)
+        hosii=true
+        ;;
       *)
         yen+=($opt)
         ;;
@@ -54,7 +58,7 @@ main() {
   fi
 
   for y in ${yen[@]}; do
-    print_trillion $y $no_time $full_yen $gift $unit
+    print_trillion $y $no_time $full_yen $gift $unit $hosii
   done
 }
 
@@ -64,6 +68,12 @@ print_trillion() {
   local full_yen=$3
   local gift=$4
   local unit=$5
+  local hosii=$6
+
+  if [ $hosii = true ]; then
+    echo "5000兆円欲しい！"
+    return
+  fi
 
   local t=$(shuf -en1 ${TIME_LIST[@]})
   local u=$(shuf -en1 ${UNIT_LIST[@]})
@@ -121,12 +131,13 @@ Unit:
     出現するお金の単位    ${UNIT_LIST[@]}
 
 Options:
-    -h, --help         このヘルプを出力する
-    -v, --version      バージョン情報を出力する
-    -n, --no-time      時間給の出力を消す
-    -f, --full-yen     単位を0に置き換える
-    -g, --gift         なんと、プレゼントしてしまう
-    -u, --unit UNIT    円を独自の単位に変更する
+    -h, --help                  このヘルプを出力する
+    -v, --version               バージョン情報を出力する
+    -n, --no-time               時間給の出力を消す
+    -f, --full-yen              単位を0に置き換える
+    -g, --gift                  なんと、プレゼントしてしまう
+    -u, --unit UNIT             円を独自の単位に変更する
+    -5, --5000-cho-yen-hosii    常に5000兆円欲しがる
 EOS
 }
 
