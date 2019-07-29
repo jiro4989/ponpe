@@ -76,7 +76,8 @@ print_trillion() {
   fi
 
   local t=$(shuf -en1 ${TIME_LIST[@]})
-  local u=$(shuf -en1 ${UNIT_LIST[@]})
+  # 通貨単位が空になるケースが欲しいための処理
+  local u=$(shuf -en1 ${UNIT_LIST[@]} x | sed "s/x//")
 
   local text=$(shuf -en1 ${t}給${yen}{,0}{,0}{,0}${u}円欲しい！)
 
