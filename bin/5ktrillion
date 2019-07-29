@@ -46,6 +46,11 @@ main() {
       -5|--5000-cho-yen-hosii)
         hosii=true
         ;;
+      -*)
+        echo "不正なオプションです: opt = $opt" >&2
+        usage
+        exit 1
+        ;;
       *)
         yen+=($opt)
         ;;
