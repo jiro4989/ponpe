@@ -2,7 +2,7 @@
 
 set -eu
 
-readonly SCRIPT_NAME=$(basename $0)
+readonly SCRIPT_NAME=$(basename "$0")
 readonly VERSION="$SCRIPT_NAME version 1.0.0
 Copyright (c) 2019 jiro4989
 Released under the MIT License.
@@ -22,10 +22,10 @@ color_format() {
     css)
       echo "rgba($r, $g, $b, 0.1);"
       ;;
-    ansi_foreground|ansi_f)
+    ansi_foreground | ansi_f)
       echo -e "$text" | sed -E "s@.*@\x1b[38;2;$r;$g;${b}m&\x1b[m@g"
       ;;
-    ansi_background|ansi_b)
+    ansi_background | ansi_b)
       echo -e "$text" | sed -E "s@.*@\x1b[48;2;$r;$g;${b}m&\x1b[m@g"
       ;;
     text)
@@ -49,12 +49,12 @@ gradation() {
   local b2=$8
   local text=$9
 
-  local r_diff=$(( (r2 - r1) / span))
-  local g_diff=$(( (g2 - g1) / span))
-  local b_diff=$(( (b2 - b1) / span))
+  local r_diff=$(((r2 - r1) / span))
+  local g_diff=$(((g2 - g1) / span))
+  local b_diff=$(((b2 - b1) / span))
 
-  for ((i=0; i<$span; i++)); do
-    color_format $format $((r1 + i * r_diff)) $((g1 + i * g_diff)) $((b1 + i * b_diff)) "$text"
+  for ((i = 0; i < "$span"; i++)); do
+    color_format "$format" $((r1 + i * r_diff)) $((g1 + i * g_diff)) $((b1 + i * b_diff)) "$text"
   done
 }
 
@@ -94,23 +94,23 @@ while ((0 < $#)); do
   opt=$1
   shift
   case $opt in
-    -h|--help)
+    -h | --help)
       usage
       exit
       ;;
-    -v|--version)
+    -v | --version)
       echo -e "$VERSION"
       exit
       ;;
-    -f|--format)
+    -f | --format)
       format=$1
       shift
       ;;
-    -t|--text)
+    -t | --text)
       text=$1
       shift
       ;;
-    -i|--stdin)
+    -i | --stdin)
       text="$(cat)"
       ;;
     *)
@@ -129,14 +129,14 @@ if [ "$format" = json ]; then
   echo "["
 fi
 (
-  gradation $span $format 255 0 0 255 69 0 "$text"
-  gradation $span $format 255 69 0 255 255 0 "$text"
-  gradation $span $format 255 255 0 0 128 0 "$text"
-  gradation $span $format 0 128 0 0 0 255 "$text"
-  gradation $span $format 0 0 255 75 0 130 "$text"
-  gradation $span $format 75 0 130 238 130 238 "$text"
-  gradation $span $format 238 130 238 255 0 0 "$text"
-) | awk -v format=$format '
+  gradation "$span" "$format" 255 0 0 255 69 0 "$text"
+  gradation "$span" "$format" 255 69 0 255 255 0 "$text"
+  gradation "$span" "$format" 255 255 0 0 128 0 "$text"
+  gradation "$span" "$format" 0 128 0 0 0 255 "$text"
+  gradation "$span" "$format" 0 0 255 75 0 130 "$text"
+  gradation "$span" "$format" 75 0 130 238 130 238 "$text"
+  gradation "$span" "$format" 238 130 238 255 0 0 "$text"
+) | awk -v format="$format" '
     { array[NR] = $0 }
     END{
       for (i in array) {

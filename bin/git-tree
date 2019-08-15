@@ -2,18 +2,18 @@
 
 set -eu
 
-readonly SCRIPT_NAME=$(basename $0)
+readonly SCRIPT_NAME=$(basename "$0")
 
 while ((0 < $#)); do
   opt=$1
   shift
   case $opt in
-    -h|--help)
-    cat << EOS
+    -h | --help)
+      cat << EOS
 $SCRIPT_NAME はGitのログをツリー状にし、ログを1行で出力する
 EOS
-    exit
-    ;;
+      exit
+      ;;
   esac
 done
 

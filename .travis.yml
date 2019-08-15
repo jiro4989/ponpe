@@ -21,6 +21,10 @@ addons:
   apt:
     packages:
       - gawk
+      - gcc
+      - make
+      - golang
+      - shellcheck
 
 before_install:
   - sudo add-apt-repository ppa:duggan/bats --yes
@@ -28,8 +32,11 @@ before_install:
 
 install:
   - sudo apt-get install -qq bats
+  - GO111MODULE=off go get mvdan.cc/sh/cmd/shfmt
   - sudo ./install.sh
 
 script:
   - /bin/bash --version
+  - shfmt -i 2 -ci -sr -d bin/
+  - shellcheck bin/*
   - ./test.bats

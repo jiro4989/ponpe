@@ -2,7 +2,7 @@
 
 set -eu
 
-readonly SCRIPT_NAME=$(basename $0)
+readonly SCRIPT_NAME=$(basename "$0")
 readonly VERSION="$SCRIPT_NAME version 1.0.0
 Copyright (c) 2019 jiro4989
 Released under the MIT License.
@@ -14,27 +14,28 @@ main() {
     local opt=$1
     shift
     case "$opt" in
-      -h|--help)
+      -h | --help)
         usage
         return
         ;;
-      -v|--version)
+      -v | --version)
         echo -e "$VERSION"
         return
         ;;
       *)
-        args+=($opt)
+        args+=("$opt")
+        ;;
     esac
   done
 
   local plugin_name=${args[0]}
   local command_name=${args[1]}
   local func_name=${args[2]}
-  mkdir $plugin_name
-  cd $_
-  make_autoload $plugin_name $command_name $func_name
-  make_doc $plugin_name $command_name $func_name
-  make_plugin $plugin_name $command_name $func_name
+  mkdir "$plugin_name"
+  cd "$_"
+  make_autoload "$plugin_name" "$command_name" "$func_name"
+  make_doc "$plugin_name" "$command_name" "$func_name"
+  make_plugin "$plugin_name" "$command_name" "$func_name"
 }
 
 usage() {
@@ -55,7 +56,7 @@ make_autoload() {
   local command_name=$2
   local func_name=$3
   mkdir autoload
-  cat << EOS > autoload/$plugin_name.vim
+  cat << EOS > "autoload/$plugin_name.vim"
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -74,7 +75,7 @@ make_doc() {
   local command_name=$2
   local func_name=$3
   mkdir doc
-  cat << EOS > doc/$plugin_name.txt
+  cat << EOS > "doc/$plugin_name.txt"
 *${plugin_name}.txt*	Description.
 
 Version:	1.0
@@ -101,7 +102,7 @@ make_plugin() {
   local command_name=$2
   local func_name=$3
   mkdir plugin
-  cat << EOS > plugin/$plugin_name.vim
+  cat << EOS > "plugin/$plugin_name.vim"
 if exists("g:loaded_${plugin_name}")
   finish
 endif

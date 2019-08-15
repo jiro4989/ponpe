@@ -2,7 +2,7 @@
 
 set -eu
 
-readonly SCRIPT_NAME=$(basename $0)
+readonly SCRIPT_NAME=$(basename "$0")
 readonly VERSION="$SCRIPT_NAME version 1.1.0
 Copyright (c) 2019 jiro4989
 Released under the MIT License.
@@ -17,33 +17,33 @@ main() {
   local gift=false
   local unit=円
   local hosii=false
-  local yen=()
-  while (( 0 < $# )); do
+  local yen_list=()
+  while ((0 < $#)); do
     local opt=$1
     shift
     case "$opt" in
-      -h|--help)
+      -h | --help)
         usage
         return
         ;;
-      -v|--version)
+      -v | --version)
         echo -e "$VERSION"
         return
         ;;
-      -n|--no-time)
+      -n | --no-time)
         no_time=true
         ;;
-      -f|--full-yen)
+      -f | --full-yen)
         full_yen=true
         ;;
-      -g|--gift)
+      -g | --gift)
         gift=true
         ;;
-      -u|--unit)
+      -u | --unit)
         unit=$1
         shift
         ;;
-      -5|--5000-cho-yen-hosii)
+      -5 | --5000-cho-yen-hosii)
         hosii=true
         ;;
       -*)
@@ -52,18 +52,18 @@ main() {
         exit 1
         ;;
       *)
-        yen+=($opt)
+        yen_list+=("$opt")
         ;;
     esac
   done
 
   # お金の指定がなければ5
-  if [ ${#yen[@]} -lt 1 ]; then
-    yen+=(5)
+  if [ "${#yen_list[@]}" -lt 1 ]; then
+    yen_list+=(5)
   fi
 
-  for y in ${yen[@]}; do
-    print_trillion $y $no_time $full_yen $gift $unit $hosii
+  for y in "${yen_list[@]}"; do
+    print_trillion "$y" "$no_time" "$full_yen" "$gift" "$unit" "$hosii"
   done
 }
 
@@ -75,52 +75,57 @@ print_trillion() {
   local unit=$5
   local hosii=$6
 
-  if [ $hosii = true ]; then
+  if [ "$hosii" = true ]; then
     echo "5000兆円欲しい！"
     return
   fi
 
-  local t=$(shuf -en1 ${TIME_LIST[@]})
-  # 通貨単位が空になるケースが欲しいための処理
-  local u=$(shuf -en1 ${UNIT_LIST[@]} x | sed "s/x//")
+  local t
+  t=$(shuf -en1 "${TIME_LIST[@]}")
 
-  local text=$(shuf -en1 ${t}給${yen}{,0}{,0}{,0}${u}円欲しい！)
+  # 通貨単位が空になるケースが欲しいための処理
+  local u
+  u=$(shuf -en1 "${UNIT_LIST[@]}" x | sed "s/x//")
+
+  local text
+  text=$(shuf -en1 "${t}"給"${yen}"{,0}{,0}{,0}"${u}"円欲しい！)
 
   # 時間給の出力を消す
-  if [ $no_time = true ]; then
-    text=$(echo $text | sed -E 's/^.*給//')
+  if [ "$no_time" = true ]; then
+    text=$(echo "$text" | sed -E 's/^.*給//')
   fi
 
   # 単位を0に置換
-  if [ $full_yen = true ]; then
-    text=$(echo $text | sed \
-      -e 's/万/0000/' \
-      -e 's/億/00000000/' \
-      -e 's/兆/000000000000/' \
-      -e 's/京/0000000000000000/' \
-      -e 's/垓/00000000000000000000/' \
-      -e 's/秭/000000000000000000000000/' \
-      -e 's/𥝱/0000000000000000000000000000/' \
-      -e 's/穣/00000000000000000000000000000000/' \
-      -e 's/溝/000000000000000000000000000000000000/' \
-      -e 's/澗/0000000000000000000000000000000000000000/' \
-      -e 's/正/00000000000000000000000000000000000000000000/' \
-      -e 's/載/000000000000000000000000000000000000000000000000/' \
-      -e 's/極/0000000000000000000000000000000000000000000000000000/' \
-      -e 's/恒河沙/00000000000000000000000000000000000000000000000000000000/' \
-      -e 's/阿僧祇/000000000000000000000000000000000000000000000000000000000000/' \
-      -e 's/那由他/0000000000000000000000000000000000000000000000000000000000000000/' \
-      -e 's/不可思議/00000000000000000000000000000000000000000000000000000000000000000000/' \
-      -e 's/無量大数/000000000000000000000000000000000000000000000000000000000000000000000000/' \
-      )
+  if [ "$full_yen" = true ]; then
+    text=$(
+      echo "$text" | sed \
+        -e 's/万/0000/' \
+        -e 's/億/00000000/' \
+        -e 's/兆/000000000000/' \
+        -e 's/京/0000000000000000/' \
+        -e 's/垓/00000000000000000000/' \
+        -e 's/秭/000000000000000000000000/' \
+        -e 's/𥝱/0000000000000000000000000000/' \
+        -e 's/穣/00000000000000000000000000000000/' \
+        -e 's/溝/000000000000000000000000000000000000/' \
+        -e 's/澗/0000000000000000000000000000000000000000/' \
+        -e 's/正/00000000000000000000000000000000000000000000/' \
+        -e 's/載/000000000000000000000000000000000000000000000000/' \
+        -e 's/極/0000000000000000000000000000000000000000000000000000/' \
+        -e 's/恒河沙/00000000000000000000000000000000000000000000000000000000/' \
+        -e 's/阿僧祇/000000000000000000000000000000000000000000000000000000000000/' \
+        -e 's/那由他/0000000000000000000000000000000000000000000000000000000000000000/' \
+        -e 's/不可思議/00000000000000000000000000000000000000000000000000000000000000000000/' \
+        -e 's/無量大数/000000000000000000000000000000000000000000000000000000000000000000000000/'
+    )
   fi
 
   # なんと、プレゼントしてしまう
-  if [ $gift = true ]; then
-    text=$(echo $text | sed -E 's/欲しい/あげる/')
+  if [ "$gift" = true ]; then
+    text=$(echo "$text" | sed -E 's/欲しい/あげる/')
   fi
 
-  echo $text | sed 's/円/'"$unit"'/g'
+  echo "${text//円/$unit}"
 }
 
 usage() {
