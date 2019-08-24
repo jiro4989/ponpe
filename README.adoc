@@ -18,6 +18,7 @@ https://github.com/jiro4989/gits[gits]に移行したのでこちらのgitctlは
 |rainbow|虹色を様々な書式で出力する
 |vp|VimPluginリポジトリの雛形を作成する
 |5ktrillion|「5000兆円ほしい」を出力する
+|diacrit|ダイアクリティカルマークを扱う
 |=================
 
 == Install
