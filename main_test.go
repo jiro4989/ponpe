@@ -13,8 +13,9 @@ func TestMain(t *testing.T) {
 		want int
 	}
 	tests := []TestData{
-		{desc: "正常系: aaとdd", in: []string{"aa", "dd"}, want: 0},
-		{desc: "異常系: aaとbb", in: []string{"aa", "bb"}, want: 2},
+		{desc: "正常系: aaとdd", in: []string{"./bin/ponpe", "aa", "dd"}, want: 0},
+		{desc: "正常系: ponponpainとharaita-i", in: []string{"ponpe", "ponponpain", "haraita-i"}, want: 0},
+		{desc: "異常系: aaとbb", in: []string{"ponpe", "aa", "bb"}, want: 2},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {

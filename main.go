@@ -33,7 +33,7 @@ func main() {
 
 func Main(argv []string) int {
 	parser := &docopt.Parser{}
-	args, _ := parser.ParseArgs(doc, argv, Version)
+	args, _ := parser.ParseArgs(doc, argv[1:], Version)
 	config := Config{}
 	err := args.Bind(&config)
 	if err != nil {
