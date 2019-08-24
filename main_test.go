@@ -15,6 +15,7 @@ func TestMain(t *testing.T) {
 	tests := []TestData{
 		{desc: "正常系: aaとdd", in: []string{"./bin/ponpe", "aa", "dd"}, want: 0},
 		{desc: "正常系: ponponpainとharaita-i", in: []string{"ponpe", "ponponpain", "haraita-i"}, want: 0},
+		{desc: "正常系: aaとddとcc", in: []string{"ponpe", "aa", "cc", "dd"}, want: 0},
 		{desc: "異常系: aaとbb", in: []string{"ponpe", "aa", "bb"}, want: 2},
 	}
 	for _, tt := range tests {
@@ -51,16 +52,18 @@ func TestJoinWords(t *testing.T) {
 	type TestData struct {
 		desc string
 		inW  []rune
-		inM  []rune
+		inM  [][]rune
 		want string
 	}
 	tests := []TestData{
-		{desc: "wはmより長い", inW: []rune{'a', 'b'}, inM: []rune{'z'}, want: "azb"},
-		{desc: "wはmと同じ長さ", inW: []rune{'a', 'b'}, inM: []rune{'z', 'y'}, want: "azby"},
+		{desc: "wはmより長い", inW: []rune{'a', 'b'}, inM: [][]rune{{'z'}}, want: "azb"},
+		{desc: "wはmと同じ長さ", inW: []rune{'a', 'b'}, inM: [][]rune{{'z', 'y'}}, want: "azby"},
+		{desc: "mが3個", inW: []rune{'a', 'b'}, inM: [][]rune{{'z', 'y'}, {'A', 'B'}, {'C', 'D'}}, want: "azACbyBD"},
+		{desc: "mが0個", inW: []rune{'a', 'b'}, inM: [][]rune{}, want: "ab"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
-			got := joinWords(tt.inW, tt.inM)
+			got := joinWords(tt.inW, tt.inM...)
 			assert.Equal(t, tt.want, got, tt.desc)
 		})
 	}
