@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/docopt/docopt-go"
 	"github.com/jiro4989/ponpe/unicode"
@@ -27,18 +28,24 @@ Options:
 )
 
 func main() {
+	os.Exit(Main(os.Args))
+}
+
+func Main(argv []string) int {
 	parser := &docopt.Parser{}
-	args, _ := parser.ParseArgs(doc, nil, Version)
+	args, _ := parser.ParseArgs(doc, argv, Version)
 	config := Config{}
 	err := args.Bind(&config)
 	if err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		return 1
 	}
 
 	// ダイアクリティカルマークに変換可能かチェック
 	mark := []rune(config.Words[0])
 	if err := unicode.ValidateDiaCriticalMark(mark); err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		return 2
 	}
 
 	// ダイアクリティカルマークに変換
@@ -50,6 +57,7 @@ func main() {
 	// 結合して出力
 	s := joinWords(word, mark)
 	fmt.Println(s)
+	return 0
 }
 
 func deleteOverSize(w, m []rune) ([]rune, []rune) {
