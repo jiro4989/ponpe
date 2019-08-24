@@ -1,5 +1,5 @@
 APPNAME := $(shell basename `pwd`)
-VERSION := $(shell grep Version version.go | grep -Eo '`.*$$' | tr -d '`')
+VERSION := $(shell grep Version version.go | grep -Eo '`[0-9\.]+$$' | tr -d '`')
 LDFLAGS := -ldflags="-s -w \
 	-extldflags \"-static\""
 XBUILD_TARGETS := \
@@ -19,8 +19,8 @@ build: ## ビルド
 	go build $(LDFLAGS) -o bin/$(APPNAME) .
 
 .PHONY: install
-install: build ## インストール
-	go install
+install: ## インストール
+	go install $(LDFLAGS)
 
 .PHONY: xbuild
 xbuild:  bootstrap ## クロスコンパイル
