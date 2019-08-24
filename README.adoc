@@ -1,23 +1,6 @@
-= scripts
+= ponpe
 
-image:https://travis-ci.org/jiro4989/scripts.svg?branch=master["Build Status", link="https://travis-ci.org/jiro4989/scripts"]
-
-次郎の自分用スクリプト置き場。
-全部bashで書かれている。
-
-== Scripts
-
-[options="header"]
-|=================
-|Script|Description
-|color|ターミナル上で使える色のエスケープシーケンスの一覧を表示する
-|ghrepos|指定のユーザのGitHubのリポジトリ名の一覧を出力する
-|mp42gif|ffmpegのラッパーで対話式
-|rainbow|虹色を様々な書式で出力する
-|vp|VimPluginリポジトリの雛形を作成する
-|5ktrillion|「5000兆円ほしい」を出力する
-|diacrit|ダイアクリティカルマークを扱う。pͪoͣnͬpͣoͥnͭpͣa͡iͥnが作れる
-|=================
+pͪoͣnͬpͣoͥnͭpͣa͡iͥn
 
 == Install
 
@@ -27,9 +10,4 @@ image:https://travis-ci.org/jiro4989/scripts.svg?branch=master["Build Status", l
 ----
 ./install.sh
 ----
-
-あるいは、PATHを通すとか、シンボリックリンクでもよい。
-それぞれは独立した単体のスクリプトなので、PATHの通っている場所にポン起きで動く。
-よって、全部インストールする必要はない。
-必要なコマンドだけ配置してもよい。
 
