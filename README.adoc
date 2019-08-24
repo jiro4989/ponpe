@@ -16,7 +16,7 @@ image:https://travis-ci.org/jiro4989/scripts.svg?branch=master["Build Status", l
 |rainbow|虹色を様々な書式で出力する
 |vp|VimPluginリポジトリの雛形を作成する
 |5ktrillion|「5000兆円ほしい」を出力する
-|diacrit|ダイアクリティカルマークを扱う
+|diacrit|ダイアクリティカルマークを扱う。pͪoͣnͬpͣoͥnͭpͣa͡iͥnが作れる
 |=================
 
 == Install
