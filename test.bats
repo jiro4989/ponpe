@@ -135,3 +135,20 @@
   run bash -c "5ktrillion -x"
   [ "$status" -ne 0 ]
 }
+
+@test "diacrit" {
+  run diacrit
+  [ "$status" -ne 0 ]
+
+  for opt in -h --help -v --version; do
+    run diacrit "$opt"
+    [ "$status" -eq 0 ]
+  done
+
+  run diacrit ponponpain
+  [ "$status" -ne 0 ]
+
+  run diacrit ponponpain haraita-i
+  [ "$status" -eq 0 ]
+  [ "$output" = "pͪoͣnͬpͣoͥnͭpͣa͡iͥn" ]
+}

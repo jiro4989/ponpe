@@ -1,0 +1,166 @@
+#!/bin/bash
+
+# ダイアクリティカルマーク (diacritical mark)
+# https://ja.wikipedia.org/wiki/%E3%83%80%E3%82%A4%E3%82%A2%E3%82%AF%E3%83%AA%E3%83%86%E3%82%A3%E3%82%AB%E3%83%AB%E3%83%9E%E3%83%BC%E3%82%AF
+
+set -eu
+
+SCRIPT_NAME="$(basename "${BASH_SOURCE:-$0}")"
+readonly SCRIPT_NAME
+
+readonly VERSION="$SCRIPT_NAME version 1.0.0
+Copyright (c) 2019 jiro4989
+Released under the MIT License.
+https://github.com/jiro4989/scripts"
+
+declare -A DIACRITICAL_MARKS
+DIACRITICAL_MARKS["-"]=$'\U361' # アルファベットではないけれど特別に
+DIACRITICAL_MARKS["a"]=$'\U363'
+DIACRITICAL_MARKS["e"]=$'\U364'
+DIACRITICAL_MARKS["i"]=$'\U365'
+DIACRITICAL_MARKS["o"]=$'\U366'
+DIACRITICAL_MARKS["u"]=$'\U367'
+DIACRITICAL_MARKS["c"]=$'\U368'
+DIACRITICAL_MARKS["d"]=$'\U369'
+DIACRITICAL_MARKS["h"]=$'\U36A'
+DIACRITICAL_MARKS["m"]=$'\U36B'
+DIACRITICAL_MARKS["r"]=$'\U36C'
+DIACRITICAL_MARKS["t"]=$'\U36D'
+DIACRITICAL_MARKS["v"]=$'\U36E'
+DIACRITICAL_MARKS["x"]=$'\U36F'
+readonly DIACRITICAL_MARKS
+
+readonly ALPHABETS=(a e i o u c d h m r t v x)
+
+main() {
+  local args=()
+  while ((0 < $#)); do
+    local opt="$1"
+    shift
+
+    case "$opt" in
+      -h | --help)
+        usage
+        return
+        ;;
+      -v | --version)
+        echo "$VERSION"
+        return
+        ;;
+      *)
+        args+=("$opt")
+        ;;
+    esac
+  done
+
+  # 引数は最低でも2つ必要
+  if [[ "${#args[@]}" -ne 2 ]]; then
+    usage >&2
+    return 1
+  fi
+
+  local src_word="${args[0]}"
+  local diacrit_word="${args[1]}"
+
+  validate_diacritical_mark "$diacrit_word"
+  diacrit_word="$(to_diacritical_mark "$diacrit_word")"
+  join_words "$src_word" "$diacrit_word"
+}
+
+usage() {
+  cat << EOS
+$SCRIPT_NAME は文字の上に文字を結合します。
+
+Usage:
+    $SCRIPT_NAME <word> <diacritical_mark>
+    $SCRIPT_NAME (-h | --help)
+    $SCRIPT_NAME (-v | --version)
+
+About 'Diacritical mark':
+    Diacritical mark（ダイアクリティカルマーク）はUnicodeコードポイントのU+0300
+    からU+036Fに位置します。
+
+    全てのアルファベットをダイアクリティカルマークに変換することはできません。
+
+    使用可能なアルファベットは以下のとおりです。
+
+      ${ALPHABETS[*]}
+
+Options:
+    -h, --help       このヘルプを出力する
+    -v, --version    バージョン情報を出力する
+EOS
+}
+
+## validate_diacritical_mark は入力がダイアクリティカルマークに紐付けられるか検
+## 証する。
+validate_diacritical_mark() {
+  local diacrit="$1"
+  local err_count=0
+
+  while read -r c; do
+    if ! has_diacritical_mark "$c"; then
+      err "$c はダイアクリティカルマークに存在しません。"
+      err_count=$((err_count + 1))
+    fi
+  done <<< "$(grep -o . <<< "$diacrit")"
+
+  if found_error "$err_count"; then
+    exit 1
+  fi
+}
+
+## has_diacritical_mark は入力の文字をダイアクリティカルマークのハッシュマップが
+## キーとして保持しているかを判定する。
+has_diacritical_mark() {
+  # 空文字のときはスルー
+  if [[ "$1" == "" ]]; then
+    return
+  fi
+
+  [[ -v DIACRITICAL_MARKS["$1"] ]]
+}
+
+## found_error はエラーが1件以上存在したかを判定する。
+found_error() {
+  [[ 0 -lt "$1" ]]
+}
+
+## to_diacritical_mark はアルファベットをダイアクリティカルマークに変換する。
+to_diacritical_mark() {
+  local diacrit="$1"
+  grep -o . <<< "$diacrit" | while read -r c; do
+    # 空文字のときはスキップ
+    if [[ "$c" == "" ]]; then
+      echo -n " "
+      continue
+    fi
+
+    echo -n "${DIACRITICAL_MARKS[$c]}"
+  done
+}
+
+## join_words は2つの入力を結合する。
+## 第2引数はダイアクリティカルマークでなければならない。
+join_words() {
+  local src_word="$1"
+  local diacrit_word="$2"
+  local src_length=${#src_word}
+
+  # 1. ダイアクリティカルマークの長さは結合先の文字を超えてはならない
+  # 2. ダイアクリティカルマーク側に半角スペースが存在したらスキップする
+  paste \
+    -d "" \
+    <(grep -o . <<< "$src_word") \
+    <(grep -o . <<< "$diacrit_word" | head -n "$src_length") |
+    sed -E "s/ +$//g" |
+    tr -d \\n
+  echo
+}
+
+err() {
+  echo -e "[ERROR] $SCRIPT_NAME: $*"
+}
+
+main ${1+"$@"}
+exit $?
