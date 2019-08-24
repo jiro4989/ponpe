@@ -1,8 +1,30 @@
 = ponpe
+:author: jiro4989
+:sectnums:
+:toc: left
 
 image:https://travis-ci.org/jiro4989/ponpe.svg?branch=master["Build Status", link="https://travis-ci.org/jiro4989/ponpe"]
 
+https://qiita.com/ykhirao/items/9ca1fbd294883e06dbd6[pͪoͣnͬpͣoͥnͭpͣa͡iͥnを支える技術]に
+触発されて作ったpͪoͣnͬpͣoͥnͭpͣa͡iͥnできるコマンド。
+
+== Usage
+
+とりあえず、pͪoͣnͬpͣoͥnͭpͣa͡iͥnする。
+
+[source,bash]
+----
+% ponpe ponponpain haraita-i
 pͪoͣnͬpͣoͥnͭpͣa͡iͥn
+----
+
+第2引数以降を全部1文字目に結合するので、以下のようなこともできる。
+
+[source,bash]
+----
+% ponpe ____ dddd aaaa tttt eeee
+_ͩͣͭͤ_ͩͣͭͤ_ͩͣͭͤ_ͩͣͭͤ
+----
 
 == Install
 
@@ -13,3 +35,20 @@ pͪoͣnͬpͣoͥnͭpͣa͡iͥn
 make install
 ----
 
+== Help
+
+ ponpe prints ponpe of text.
+ 
+ Usage:
+ 	ponpe [options]
+ 	ponpe [options] <word> <words>...
+ 	ponpe -h | --help
+ 	ponpe -v | --version
+ 
+ Options:
+ 	-h --help                     Show this screen.
+ 	-v --version                  Show version.
+
+== LICENSE
+
+MIT
