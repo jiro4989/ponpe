@@ -41,21 +41,28 @@ func Main(argv []string) int {
 		return 1
 	}
 
-	// ダイアクリティカルマークに変換可能かチェック
-	mark := []rune(config.Words[0])
-	if err := unicode.ValidateDiaCriticalMark(mark); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return 2
+	var word []rune
+	var marks [][]rune
+	for _, orgMark := range config.Words {
+		// ダイアクリティカルマークに変換可能かチェック
+		mark := []rune(orgMark)
+		if err := unicode.ValidateDiaCriticalMark(mark); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			return 2
+		}
+
+		// ダイアクリティカルマークに変換
+		mark = unicode.ToDiaCriticalMark(mark)
+		// 結合先の文字よりも、結合文字が多くてはならない
+		w, m := deleteOverSize([]rune(config.Word), mark)
+
+		// wordは常に1つのため上書きで良い
+		word = w
+		marks = append(marks, m)
 	}
 
-	// ダイアクリティカルマークに変換
-	mark = unicode.ToDiaCriticalMark(mark)
-
-	// 結合先の文字よりも、結合文字が多くてはならない
-	word, mark := deleteOverSize([]rune(config.Word), mark)
-
 	// 結合して出力
-	s := joinWords(word, mark)
+	s := joinWords(word, marks...)
 	fmt.Println(s)
 	return 0
 }
@@ -67,14 +74,20 @@ func deleteOverSize(w, m []rune) ([]rune, []rune) {
 	return w, m
 }
 
-func joinWords(w, m []rune) string {
+func joinWords(w []rune, m ...[]rune) string {
+	if len(m) < 1 {
+		return string(w)
+	}
+
 	var s string
 	for i := 0; i < len(w); i++ {
 		s += string(w[i])
-		if len(m) <= i {
-			continue
+		for _, mm := range m {
+			if len(mm) <= i {
+				continue
+			}
+			s += string(mm[i])
 		}
-		s += string(m[i])
 	}
 	return s
 }
