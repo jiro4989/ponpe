@@ -8,6 +8,6 @@ pͪoͣnͬpͣoͥnͭpͣa͡iͥn
 
 [source,bash]
 ----
-./install.sh
+make install
 ----
 
