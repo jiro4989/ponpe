@@ -8,6 +8,8 @@ image:https://travis-ci.org/jiro4989/ponpe.svg?branch=master["Build Status", lin
 https://qiita.com/ykhirao/items/9ca1fbd294883e06dbd6[pͪoͣnͬpͣoͥnͭpͣa͡iͥnを支える技術]に
 触発されて作ったpͪoͣnͬpͣoͥnͭpͣa͡iͥnできるコマンド。
 
+ponponpainだったらponpaじゃないの？とか言ってはいけない。
+
 == Usage
 
 とりあえず、pͪoͣnͬpͣoͥnͭpͣa͡iͥnする。
