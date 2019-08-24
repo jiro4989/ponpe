@@ -1,5 +1,7 @@
 = ponpe
 
+image:https://travis-ci.org/jiro4989/ponpe.svg?branch=master["Build Status", link="https://travis-ci.org/jiro4989/ponpe"]
+
 pͪoͣnͬpͣoͥnͭpͣa͡iͥn
 
 == Install
