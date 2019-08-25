@@ -34,8 +34,13 @@ _ͩͣͭͤ_ͩͣͭͤ_ͩͣͭͤ_ͩͣͭͤ
 
 [source,bash]
 ----
-make install
+go get -u github.com/jiro4989/ponpe
 ----
+
+あるいは
+
+[Releases](https://github.com/jiro4989/ponpe/releases)からダウンロードしてくだ
+さい。
 
 == Help
 
