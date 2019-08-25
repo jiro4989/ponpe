@@ -1,5 +1,5 @@
 APPNAME := $(shell basename `pwd`)
-VERSION := $(shell grep Version version.go | grep -Eo '`[0-9\.]+$$' | tr -d '`')
+VERSION := $(shell grep Version version.go | grep -Eo "version.*" | grep -Eo '[\.0-9]+$$')
 LDFLAGS := -ldflags="-s -w \
 	-extldflags \"-static\""
 XBUILD_TARGETS := \
