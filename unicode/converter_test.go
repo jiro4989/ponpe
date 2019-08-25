@@ -6,27 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidateDiaCriticalMark(t *testing.T) {
-	type TestData struct {
-		desc    string
-		in      []rune
-		wantErr bool
-	}
-	tests := []TestData{
-		{desc: "aは変換可能", in: []rune{'a'}},
-		{desc: "haは変換可能", in: []rune{'h', 'a'}},
-		{desc: "bは変換不可", in: []rune{'b'}, wantErr: true},
-	}
-	for _, tt := range tests {
-		t.Run(tt.desc, func(t *testing.T) {
-			err := ValidateDiaCriticalMark(tt.in)
-			if tt.wantErr {
-				assert.Error(t, err, tt.desc)
-			}
-		})
-	}
-}
-
 func TestToDiaCriticalMark(t *testing.T) {
 	type TestData struct {
 		desc string
