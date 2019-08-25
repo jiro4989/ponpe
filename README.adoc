@@ -39,7 +39,7 @@ go get -u github.com/jiro4989/ponpe
 
 あるいは
 
-[Releases](https://github.com/jiro4989/ponpe/releases)からダウンロードしてくだ
+https://github.com/jiro4989/ponpe/releases[Releases]からダウンロードしてくだ
 さい。
 
 == Help
