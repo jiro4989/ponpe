@@ -22,21 +22,6 @@ var (
 		'v': '\u036E',
 		'x': '\u036F',
 	}
-	Alphabets = []rune{
-		'a',
-		'e',
-		'i',
-		'o',
-		'u',
-		'c',
-		'd',
-		'h',
-		'm',
-		'r',
-		't',
-		'v',
-		'x',
-	}
 )
 
 // ValidateDiaCriticalMark は文字列がダイアクリティカルマークに変換可能か検証す
@@ -49,14 +34,4 @@ func ValidateDiaCriticalMark(s []rune) error {
 		}
 	}
 	return nil
-}
-
-// ToDiaCriticalMark はダイアクリティカルマークへ変換する。
-func ToDiaCriticalMark(s []rune) []rune {
-	var marks []rune
-	for _, v := range s {
-		mark := DiaCriticalMarks[v]
-		marks = append(marks, mark)
-	}
-	return marks
 }

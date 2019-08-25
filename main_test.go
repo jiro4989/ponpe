@@ -10,13 +10,21 @@ func TestMain(t *testing.T) {
 	type TestData struct {
 		desc string
 		in   []string
-		want int
+		want ErrorCode
 	}
 	tests := []TestData{
-		{desc: "正常系: aaとdd", in: []string{"./bin/ponpe", "aa", "dd"}, want: 0},
-		{desc: "正常系: ponponpainとharaita-i", in: []string{"ponpe", "ponponpain", "haraita-i"}, want: 0},
-		{desc: "正常系: aaとddとcc", in: []string{"ponpe", "aa", "cc", "dd"}, want: 0},
-		{desc: "異常系: aaとbb", in: []string{"ponpe", "aa", "bb"}, want: 2},
+		{desc: "正常系: join: aaとdd", in: []string{"./bin/ponpe", "join", "aa", "dd"}, want: errorCodeOk},
+		{desc: "正常系: join: ponponpainとharaita-i", in: []string{"ponpe", "join", "ponponpain", "haraita-i"}, want: errorCodeOk},
+		{desc: "正常系: join: aaとddとcc", in: []string{"ponpe", "join", "aa", "cc", "dd"}, want: errorCodeOk},
+		{desc: "異常系: join: aaとbb", in: []string{"ponpe", "join", "aa", "bb"}, want: errorCodeIllegalAlphabet},
+		{desc: "正常系: j: aaとdd (joinのエイリアス)", in: []string{"ponpe", "j", "aa", "dd"}, want: errorCodeOk},
+		{desc: "正常系: list: all", in: []string{"ponpe", "list", "all"}, want: errorCodeOk},
+		{desc: "正常系: list: a", in: []string{"ponpe", "list", "a"}, want: errorCodeOk},
+		{desc: "正常系: list: diacritical_mark", in: []string{"ponpe", "list", "diacritical_mark"}, want: errorCodeOk},
+		{desc: "正常系: list: dm", in: []string{"ponpe", "list", "dm"}, want: errorCodeOk},
+		{desc: "正常系: list: cyrillic_alphabets", in: []string{"ponpe", "list", "cyrillic_alphabets"}, want: errorCodeOk},
+		{desc: "正常系: list: ca", in: []string{"ponpe", "list", "ca"}, want: errorCodeOk},
+		{desc: "正常系: l: ca (listのエイリアス)", in: []string{"ponpe", "l", "ca"}, want: errorCodeOk},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {

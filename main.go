@@ -8,17 +8,25 @@ import (
 	"github.com/jiro4989/ponpe/unicode"
 )
 
-type Config struct {
-	Word  string
-	Words []string
-}
+type (
+	Config struct {
+		CmdJoin           bool `docopt:"join,j"`
+		CmdList           bool `docopt:"list,l"`
+		All               bool `docopt:"all,a"`
+		DiaCriticalMark   bool `docopt:"diacritical_mark,dm"`
+		CyrillicAlphabets bool `docopt:"cyrillic_alphabets,ca"`
+		Word              string
+		Words             []string
+	}
+	ErrorCode int
+)
 
 const (
 	doc = `ponpe prints ponpe of text.
 
 Usage:
-	ponpe [options]
-	ponpe [options] <word> <words>...
+	ponpe (join | j) <word> <words>...
+	ponpe (list | l) (all | a | diacritical_mark | dm | cyrillic_alphabets | ca)
 	ponpe -h | --help
 	ponpe -v | --version
 
@@ -27,20 +35,39 @@ Options:
 	-v --version                  Show version.`
 )
 
+const (
+	errorCodeOk ErrorCode = iota
+	errorCodeFailedBinding
+	errorCodeIllegalAlphabet
+	errorCodeIllegalConverter
+)
+
 func main() {
-	os.Exit(Main(os.Args))
+	os.Exit(int(Main(os.Args)))
 }
 
-func Main(argv []string) int {
+func Main(argv []string) ErrorCode {
 	parser := &docopt.Parser{}
 	args, _ := parser.ParseArgs(doc, argv[1:], Version)
 	config := Config{}
 	err := args.Bind(&config)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		return 1
+		return errorCodeFailedBinding
 	}
 
+	if config.CmdJoin {
+		return cmdJoin(config)
+	}
+
+	if config.CmdList {
+		return cmdList(config)
+	}
+
+	return 99
+}
+
+func cmdJoin(config Config) ErrorCode {
 	var word []rune
 	var marks [][]rune
 	for _, orgMark := range config.Words {
@@ -48,7 +75,7 @@ func Main(argv []string) int {
 		mark := []rune(orgMark)
 		if err := unicode.ValidateDiaCriticalMark(mark); err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			return 2
+			return errorCodeIllegalAlphabet
 		}
 
 		// ダイアクリティカルマークに変換
@@ -64,7 +91,7 @@ func Main(argv []string) int {
 	// 結合して出力
 	s := joinWords(word, marks...)
 	fmt.Println(s)
-	return 0
+	return errorCodeOk
 }
 
 func deleteOverSize(w, m []rune) ([]rune, []rune) {
@@ -90,4 +117,25 @@ func joinWords(w []rune, m ...[]rune) string {
 		}
 	}
 	return s
+}
+
+func cmdList(config Config) ErrorCode {
+	var converter map[rune]rune
+	if config.All {
+		converter = unicode.CombindingCharacterMap
+	} else if config.DiaCriticalMark {
+		converter = unicode.DiaCriticalMarks
+	} else if config.CyrillicAlphabets {
+		converter = unicode.CyrillicAlphabets
+	} else {
+		// 到達しないはず
+		return errorCodeIllegalConverter
+	}
+
+	for k, v := range converter {
+		w, j := string(k), string(v)
+		s := fmt.Sprintf("%s  %s %d u%.4x", w, j, v, v)
+		fmt.Println(s)
+	}
+	return errorCodeOk
 }
