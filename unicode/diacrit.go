@@ -1,10 +1,5 @@
 package unicode
 
-import (
-	"errors"
-	"fmt"
-)
-
 var (
 	DiaCriticalMarks = map[rune]rune{
 		'-': '\u0361', // アルファベットではないけれど特別に
@@ -23,15 +18,3 @@ var (
 		'x': '\u036F',
 	}
 )
-
-// ValidateDiaCriticalMark は文字列がダイアクリティカルマークに変換可能か検証す
-// る。
-func ValidateDiaCriticalMark(s []rune) error {
-	for _, v := range s {
-		if _, ok := DiaCriticalMarks[v]; !ok {
-			msg := fmt.Sprintf("%sはダイアクリティカルマークではありません。", string(v))
-			return errors.New(msg)
-		}
-	}
-	return nil
-}

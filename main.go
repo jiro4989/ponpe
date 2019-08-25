@@ -40,6 +40,7 @@ const (
 	errorCodeFailedBinding
 	errorCodeIllegalAlphabet
 	errorCodeIllegalConverter
+	errorCodeIllegalCommand
 )
 
 func main() {
@@ -64,22 +65,23 @@ func Main(argv []string) ErrorCode {
 		return cmdList(config)
 	}
 
-	return 99
+	// 到達しないはず
+	return errorCodeIllegalCommand
 }
 
 func cmdJoin(config Config) ErrorCode {
 	var word []rune
 	var marks [][]rune
 	for _, orgMark := range config.Words {
-		// ダイアクリティカルマークに変換可能かチェック
+		// 結合文字に変換可能かチェック
 		mark := []rune(orgMark)
-		if err := unicode.ValidateDiaCriticalMark(mark); err != nil {
+		if err := unicode.ValidateCombindingCharacterMap(mark); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return errorCodeIllegalAlphabet
 		}
 
-		// ダイアクリティカルマークに変換
-		mark = unicode.ToDiaCriticalMark(mark)
+		// 結合文字に変換
+		mark = unicode.ToCombindingCharacterMap(mark)
 		// 結合先の文字よりも、結合文字が多くてはならない
 		w, m := deleteOverSize([]rune(config.Word), mark)
 
