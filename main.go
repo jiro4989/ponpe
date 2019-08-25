@@ -10,10 +10,9 @@ import (
 
 type (
 	Config struct {
-		CmdJoin           bool `docopt:"join,j"`
-		CmdList           bool `docopt:"list,l"`
-		All               bool `docopt:"all,a"`
-		DiaCriticalMark   bool `docopt:"diacritical_mark,dm"`
+		List              bool `docopt:"-l,--list"`
+		All               bool `docopt:"all"`
+		DiacriticalMark   bool `docopt:"diacritical_mark,dm"`
 		CyrillicAlphabets bool `docopt:"cyrillic_alphabets,ca"`
 		Word              string
 		Words             []string
@@ -25,14 +24,21 @@ const (
 	doc = `ponpe prints ponpe of text.
 
 Usage:
-	ponpe (join | j) <word> <words>...
-	ponpe (list | l) (all | a | diacritical_mark | dm | cyrillic_alphabets | ca)
+	ponpe [options] <word>
+	ponpe [options] <word> <words>...
+	ponpe [-l | --list] (all | diacritical_mark | dm | cyrillic_alphabets | ca)
 	ponpe -h | --help
 	ponpe -v | --version
 
+Examples:
+	ponpe ponponpain haraita-i
+	ponpe ____ dddd aaaa tttt eeee
+	echo ____ | ponpe date
+	ponpe --list all
+
 Options:
-	-h --help                     Show this screen.
-	-v --version                  Show version.`
+	-h --help       このヘルプを出力する。
+	-v --version    バージョン情報を出力する。`
 )
 
 const (
@@ -57,16 +63,11 @@ func Main(argv []string) ErrorCode {
 		return errorCodeFailedBinding
 	}
 
-	if config.CmdJoin {
-		return cmdJoin(config)
-	}
-
-	if config.CmdList {
+	if config.List {
 		return cmdList(config)
 	}
 
-	// 到達しないはず
-	return errorCodeIllegalCommand
+	return cmdJoin(config)
 }
 
 func cmdJoin(config Config) ErrorCode {
@@ -125,7 +126,7 @@ func cmdList(config Config) ErrorCode {
 	var converter map[rune]rune
 	if config.All {
 		converter = unicode.CombindingCharacterMap
-	} else if config.DiaCriticalMark {
+	} else if config.DiacriticalMark {
 		converter = unicode.DiaCriticalMarks
 	} else if config.CyrillicAlphabets {
 		converter = unicode.CyrillicAlphabets

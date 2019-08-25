@@ -13,20 +13,19 @@ func TestMain(t *testing.T) {
 		want ErrorCode
 	}
 	tests := []TestData{
-		{desc: "正常系: join: aaとdd", in: []string{"./bin/ponpe", "join", "aa", "dd"}, want: errorCodeOk},
-		{desc: "正常系: join: ponponpainとharaita-i", in: []string{"ponpe", "join", "ponponpain", "haraita-i"}, want: errorCodeOk},
-		{desc: "正常系: join: aaとddとcc", in: []string{"ponpe", "join", "aa", "cc", "dd"}, want: errorCodeOk},
-		{desc: "正常系: join: a..zとa..z", in: []string{"ponpe", "join", "abcdefghijklmnopqrstuvwxyz", "abcdefghijklmnopqrstuvwxyz"}, want: errorCodeOk},
-		{desc: "異常系: join: aaとあ", in: []string{"ponpe", "join", "aa", "あ"}, want: errorCodeIllegalAlphabet},
-		{desc: "正常系: join: abcdeとabcde(キリル文字)", in: []string{"ponpe", "join", "abcde", "abcde"}, want: errorCodeOk},
-		{desc: "正常系: j: aaとdd (joinのエイリアス)", in: []string{"ponpe", "j", "aa", "dd"}, want: errorCodeOk},
-		{desc: "正常系: list: all", in: []string{"ponpe", "list", "all"}, want: errorCodeOk},
-		{desc: "正常系: list: a", in: []string{"ponpe", "list", "a"}, want: errorCodeOk},
-		{desc: "正常系: list: diacritical_mark", in: []string{"ponpe", "list", "diacritical_mark"}, want: errorCodeOk},
-		{desc: "正常系: list: dm", in: []string{"ponpe", "list", "dm"}, want: errorCodeOk},
-		{desc: "正常系: list: cyrillic_alphabets", in: []string{"ponpe", "list", "cyrillic_alphabets"}, want: errorCodeOk},
-		{desc: "正常系: list: ca", in: []string{"ponpe", "list", "ca"}, want: errorCodeOk},
-		{desc: "正常系: l: ca (listのエイリアス)", in: []string{"ponpe", "l", "ca"}, want: errorCodeOk},
+		{desc: "正常系: aaとdd", in: []string{"./bin/ponpe", "aa", "dd"}, want: errorCodeOk},
+		{desc: "正常系: ponponpainとharaita-i", in: []string{"ponpe", "ponponpain", "haraita-i"}, want: errorCodeOk},
+		{desc: "正常系: aaとddとcc", in: []string{"ponpe", "aa", "cc", "dd"}, want: errorCodeOk},
+		{desc: "正常系: a..zとa..z", in: []string{"ponpe", "abcdefghijklmnopqrstuvwxyz", "abcdefghijklmnopqrstuvwxyz"}, want: errorCodeOk},
+		{desc: "異常系: aaとあ", in: []string{"ponpe", "aa", "あ"}, want: errorCodeIllegalAlphabet},
+		{desc: "正常系: abcdeとabcde(キリル文字)", in: []string{"ponpe", "abcde", "abcde"}, want: errorCodeOk},
+		{desc: "正常系:  aaとdd (joinのエイリアス)", in: []string{"ponpe", "j", "aa", "dd"}, want: errorCodeOk},
+		{desc: "正常系: --list: all", in: []string{"ponpe", "--list", "all"}, want: errorCodeOk},
+		{desc: "正常系: --list: diacritical_mark", in: []string{"ponpe", "--list", "diacritical_mark"}, want: errorCodeOk},
+		{desc: "正常系: --list: dm", in: []string{"ponpe", "--list", "dm"}, want: errorCodeOk},
+		{desc: "正常系: --list: cyrillic_alphabets", in: []string{"ponpe", "--list", "cyrillic_alphabets"}, want: errorCodeOk},
+		{desc: "正常系: --list: ca", in: []string{"ponpe", "--list", "ca"}, want: errorCodeOk},
+		{desc: "正常系: -l: ca (listのエイリアス)", in: []string{"ponpe", "-l", "ca"}, want: errorCodeOk},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
