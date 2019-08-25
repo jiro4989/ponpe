@@ -19,7 +19,7 @@ func TestMain(t *testing.T) {
 		{desc: "正常系: a..zとa..z", in: []string{"ponpe", "abcdefghijklmnopqrstuvwxyz", "abcdefghijklmnopqrstuvwxyz"}, want: errorCodeOk},
 		{desc: "異常系: aaとあ", in: []string{"ponpe", "aa", "あ"}, want: errorCodeIllegalAlphabet},
 		{desc: "正常系: abcdeとabcde(キリル文字)", in: []string{"ponpe", "abcde", "abcde"}, want: errorCodeOk},
-		{desc: "正常系:  aaとdd (joinのエイリアス)", in: []string{"ponpe", "j", "aa", "dd"}, want: errorCodeOk},
+		{desc: "正常系: 空白文字はスキップ", in: []string{"ponpe", "abc", "a a"}, want: errorCodeOk},
 		{desc: "正常系: --list: all", in: []string{"ponpe", "--list", "all"}, want: errorCodeOk},
 		{desc: "正常系: --list: diacritical_mark", in: []string{"ponpe", "--list", "diacritical_mark"}, want: errorCodeOk},
 		{desc: "正常系: --list: dm", in: []string{"ponpe", "--list", "dm"}, want: errorCodeOk},
@@ -69,6 +69,8 @@ func TestJoinWords(t *testing.T) {
 		{desc: "wはmと同じ長さ", inW: []rune{'a', 'b'}, inM: [][]rune{{'z', 'y'}}, want: "azby"},
 		{desc: "mが3個", inW: []rune{'a', 'b'}, inM: [][]rune{{'z', 'y'}, {'A', 'B'}, {'C', 'D'}}, want: "azACbyBD"},
 		{desc: "mが0個", inW: []rune{'a', 'b'}, inM: [][]rune{}, want: "ab"},
+		{desc: "半角スペースはスキップ", inW: []rune{'a', 'b'}, inM: [][]rune{{' ', 'y'}}, want: "aby"},
+		{desc: "半角スペースはスキップ", inW: []rune{'a', 'b', 'c'}, inM: [][]rune{{' ', ' ', 'y'}}, want: "abcy"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
