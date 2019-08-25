@@ -2,10 +2,11 @@ package unicode
 
 // キリル文字
 // https://ja.wikipedia.org/wiki/%E3%82%AD%E3%83%AA%E3%83%AB%E6%96%87%E5%AD%97#Unicode_%E5%8F%8E%E9%8C%B2%E4%BD%8D%E7%BD%AE
+// キリル文字一覧: https://ja.wikipedia.org/wiki/%E3%82%AD%E3%83%AA%E3%83%AB%E6%96%87%E5%AD%97%E4%B8%80%E8%A6%A7
+// Unicode一覧表: http://www.shurey.com/js/works/unicode.html
 var (
 	// CyrillicAlphabets はキリル文字。
 	CyrillicAlphabets = map[rune]rune{
-		'B': '\u2DE1',
 		'r': '\u2DE2',
 		'K': '\u2DE6',
 		'M': '\u2DE8',

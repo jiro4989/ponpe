@@ -6,7 +6,7 @@ var (
 
 func init() {
 	// 各アルファベットに対応する結合文字を1つのマップにまとめる
-	for _, c := range []map[rune]rune{DiaCriticalMarks, CyrillicAlphabets} {
+	for _, c := range []map[rune]rune{DiaCriticalMarks, DiaCriticalMarksSupplement, CyrillicAlphabets, EtcLetters} {
 		for k, v := range c {
 			CombindingCharacterMap[k] = v
 		}
