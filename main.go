@@ -190,7 +190,11 @@ func joinWords(w []rune, m ...[]rune) string {
 			if len(mm) <= i {
 				continue
 			}
-			s += string(mm[i])
+			m := mm[i]
+			if m == ' ' {
+				continue
+			}
+			s += string(m)
 		}
 	}
 	return s

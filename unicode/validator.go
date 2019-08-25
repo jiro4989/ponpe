@@ -23,6 +23,9 @@ func ValidateCombindingCharacterMap(s []rune) error {
 
 func validate(s []rune, m map[rune]rune, mn string) error {
 	for _, v := range s {
+		if v == ' ' {
+			continue
+		}
 		if _, ok := m[v]; !ok {
 			msg := fmt.Sprintf("%sは%sではありません。", string(v), mn)
 			return errors.New(msg)
