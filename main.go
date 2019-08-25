@@ -22,7 +22,7 @@ type (
 )
 
 const (
-	doc = `ponpe prints ponpe of text.
+	doc = `ponpe はpͪoͣnⷢpͣoꙶnͭpͣa͡iꙶnを再現するためのアルファベット結合ユーティリティです。
 
 Usage:
 	ponpe [options] <word> <words>...
@@ -32,9 +32,28 @@ Usage:
 
 Examples:
 	ponpe ponponpain haraita-i
-	ponpe ____ dddd aaaa tttt eeee
-	echo ____ | ponpe - date
+	ponpe abcd dddd aaaa tttt eeee
+	echo abcd | ponpe - date
 	ponpe --list all
+
+Available words:
+	全ての文字が使用可能なわけではありません。文字列の結合が可能かどうかは、入力
+	した文字列に紐づくUnicode結合文字が存在するかどうかで決まります。
+
+	このコマンドはアルファベットと、そのアルファベット類似した形のUnicode結合文
+	字を紐づけることで、アルファベットをUnicode結合文字に変換して結合しています。
+
+	よって、Unicode結合文字側に存在しない（＝マッピングされていない）文字を指定
+	しても結合できません。
+
+	最低限アルファベット小文字はマッピングしてありますが、アルファベット大文字は
+	部分的にしかマッピングしていません。使用可能な文字の一覧については、以下のコ
+	マンドで確認してください。
+
+		ponpe --list all
+
+	また、使用している文字が特殊な文字であるため、フォントによっては表示されない
+	場合があることをご理解ください。
 
 Options:
 	-h --help       このヘルプを出力する。
