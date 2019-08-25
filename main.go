@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 
@@ -24,7 +25,6 @@ const (
 	doc = `ponpe prints ponpe of text.
 
 Usage:
-	ponpe [options] <word>
 	ponpe [options] <word> <words>...
 	ponpe [-l | --list] (all | diacritical_mark | dm | cyrillic_alphabets | ca)
 	ponpe -h | --help
@@ -33,7 +33,7 @@ Usage:
 Examples:
 	ponpe ponponpain haraita-i
 	ponpe ____ dddd aaaa tttt eeee
-	echo ____ | ponpe date
+	echo ____ | ponpe - date
 	ponpe --list all
 
 Options:
@@ -44,6 +44,7 @@ Options:
 const (
 	errorCodeOk ErrorCode = iota
 	errorCodeFailedBinding
+	errorCodeFailedReadingStdin
 	errorCodeIllegalAlphabet
 	errorCodeIllegalConverter
 	errorCodeIllegalCommand
@@ -70,7 +71,15 @@ func Main(argv []string) ErrorCode {
 	return cmdJoin(config)
 }
 
+// cmdJoin は2つの入力を結合し、標準出力に出す。
+// 引数が'-'という指定のときは、その位置に標準入力から受け取った文字列を埋め込む
+// 。'-'指定が存在しないときは標準入力を受け付けない。
 func cmdJoin(config Config) ErrorCode {
+	if err := setStdinToArgs(&config); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return errorCodeFailedReadingStdin
+	}
+
 	var word []rune
 	var marks [][]rune
 	for _, orgMark := range config.Words {
@@ -95,6 +104,52 @@ func cmdJoin(config Config) ErrorCode {
 	s := joinWords(word, marks...)
 	fmt.Println(s)
 	return errorCodeOk
+}
+
+// setStdinToArgs は標準入力を受け取る指定があるときだけハイフンの引数の位置に標
+// 準入力を埋め込む。
+func setStdinToArgs(config *Config) error {
+	if hasStdinArgs(*config) {
+		stdinStr, err := readStdin()
+		if err != nil {
+			return err
+		}
+		// 受け取った標準入力で上書き
+		if config.Word == "-" {
+			config.Word = stdinStr
+		}
+		for i := 0; i < len(config.Words); i++ {
+			if config.Words[i] == "-" {
+				config.Words[i] = stdinStr
+			}
+		}
+	}
+	return nil
+}
+
+func hasStdinArgs(config Config) bool {
+	word, words := config.Word, config.Words
+	ws := []string{word}
+	ws = append(ws, words...)
+	for _, w := range ws {
+		if w == "-" {
+			return true
+		}
+	}
+	return false
+}
+
+func readStdin() (string, error) {
+	sc := bufio.NewScanner(os.Stdin)
+	var s string
+	for sc.Scan() {
+		s = sc.Text()
+		break
+	}
+	if err := sc.Err(); err != nil {
+		return "", err
+	}
+	return s, nil
 }
 
 func deleteOverSize(w, m []rune) ([]rune, []rune) {
