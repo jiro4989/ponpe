@@ -7,7 +7,6 @@ package unicode
 var (
 	// CyrillicAlphabets はキリル文字。
 	CyrillicAlphabets = map[rune]rune{
-		'r': '\u2DE2',
 		'K': '\u2DE6',
 		'M': '\u2DE8',
 		'H': '\u2DE9',
@@ -22,7 +21,6 @@ var (
 		'w': '\u2DF2',
 		'E': '\uA674',
 		'N': '\uA675',
-		'i': '\uA676',
 		'y': '\uA677',
 		'b': '\uA67A',
 		'W': '\uA67B',
