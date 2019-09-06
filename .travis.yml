@@ -4,9 +4,6 @@ env:
   global:
     - GO111MODULE=on
 
-install:
-  - make bootstrap
-
 script:
   - go version
   - make build
@@ -30,4 +27,3 @@ deploy:
   file_glob: true
   on:
     tags: true
-    condition: $TRAVIS_OS_NAME = linux
