@@ -26,6 +26,7 @@ func TestMain(t *testing.T) {
 		{desc: "正常系: --list: cyrillic_alphabets", in: []string{"ponpe", "--list", "cyrillic_alphabets"}, want: errorCodeOk},
 		{desc: "正常系: --list: ca", in: []string{"ponpe", "--list", "ca"}, want: errorCodeOk},
 		{desc: "正常系: -l: ca (listのエイリアス)", in: []string{"ponpe", "-l", "ca"}, want: errorCodeOk},
+		{desc: "正常系: 引数なしの場合は ponponpain haraita-i が自動挿入される", in: []string{"ponpe"}, want: errorCodeOk},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {

@@ -29,6 +29,7 @@ Usage:
 	ponpe [-l | --list] (all | diacritical_mark | dm | cyrillic_alphabets | ca)
 	ponpe -h | --help
 	ponpe -v | --version
+	ponpe
 
 Examples:
 	ponpe ponponpain haraita-i
@@ -85,6 +86,12 @@ func Main(argv []string) ErrorCode {
 
 	if config.List {
 		return cmdList(config)
+	}
+
+	// 引数未指定の時は ponponpain が自動的に設定される
+	if config.Word == "" {
+		config.Word = "ponponpain"
+		config.Words = []string{"haraita-i"}
 	}
 
 	return cmdJoin(config)
