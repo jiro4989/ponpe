@@ -4,7 +4,6 @@
 :toc: left
 
 image:https://github.com/jiro4989/ponpe/actions/workflows/test.yml/badge.svg["Build Status", link="https://github.com/jiro4989/ponpe/actions"]
-
 image:https://codecov.io/gh/jiro4989/ponpe/branch/master/graph/badge.svg["Coverage", link="https://app.codecov.io/gh/jiro4989/ponpe"]
 
 https://qiita.com/ykhirao/items/9ca1fbd294883e06dbd6[pͪoͣnͬpͣoͥnͭpͣa͡iͥnを支える技術]に
