@@ -3,7 +3,9 @@
 :sectnums:
 :toc: left
 
-image:https://travis-ci.org/jiro4989/ponpe.svg?branch=master["Build Status", link="https://travis-ci.org/jiro4989/ponpe"]
+image:https://github.com/jiro4989/ponpe/actions/workflows/test.yml/badge.svg["Build Status", link="https://github.com/jiro4989/ponpe/actions"]
+
+image:https://codecov.io/gh/jiro4989/ponpe/branch/master/graph/badge.svg["Coverage", link="https://app.codecov.io/gh/jiro4989/ponpe"]
 
 https://qiita.com/ykhirao/items/9ca1fbd294883e06dbd6[pͪoͣnͬpͣoͥnͭpͣa͡iͥnを支える技術]に
 触発されて作ったpͪoͣnͬpͣoͥnͭpͣa͡iͥnできるコマンド。
