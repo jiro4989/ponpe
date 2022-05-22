@@ -5,60 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/docopt/docopt-go"
 	"github.com/jiro4989/ponpe/unicode"
 )
 
 type (
-	Config struct {
-		List              bool `docopt:"-l,--list"`
-		All               bool `docopt:"all"`
-		DiacriticalMark   bool `docopt:"diacritical_mark,dm"`
-		CyrillicAlphabets bool `docopt:"cyrillic_alphabets,ca"`
-		Word              string
-		Words             []string
-	}
 	ErrorCode int
-)
-
-const (
-	doc = `ponpe はpͪoͣnⷢpͣoꙶnͭpͣa͡iꙶnを再現するためのアルファベット結合ユーティリティです。
-
-Usage:
-	ponpe [options] <word> <words>...
-	ponpe [-l | --list] (all | diacritical_mark | dm | cyrillic_alphabets | ca)
-	ponpe -h | --help
-	ponpe -v | --version
-	ponpe
-
-Examples:
-	ponpe ponponpain haraita-i
-	ponpe abcd dddd aaaa tttt eeee
-	echo abcd | ponpe - date
-	ponpe --list all
-
-Available words:
-	全ての文字が使用可能なわけではありません。文字列の結合が可能かどうかは、入力
-	した文字列に紐づくUnicode結合文字が存在するかどうかで決まります。
-
-	このコマンドはアルファベットと、そのアルファベット類似した形のUnicode結合文
-	字を紐づけることで、アルファベットをUnicode結合文字に変換して結合しています。
-
-	よって、Unicode結合文字側に存在しない（＝マッピングされていない）文字を指定
-	しても結合できません。
-
-	最低限アルファベット小文字はマッピングしてありますが、アルファベット大文字は
-	部分的にしかマッピングしていません。使用可能な文字の一覧については、以下のコ
-	マンドで確認してください。
-
-		ponpe --list all
-
-	また、使用している文字が特殊な文字であるため、フォントによっては表示されない
-	場合があることをご理解ください。
-
-Options:
-	-h --help       このヘルプを出力する。
-	-v --version    バージョン情報を出力する。`
 )
 
 const (
@@ -71,44 +22,39 @@ const (
 )
 
 func main() {
-	os.Exit(int(Main(os.Args)))
+	opts, err := ParseArgs()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		return
+	}
+	os.Exit(int(Main(opts)))
 }
 
-func Main(argv []string) ErrorCode {
-	parser := &docopt.Parser{}
-	args, _ := parser.ParseArgs(doc, argv[1:], Version)
-	config := Config{}
-	err := args.Bind(&config)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return errorCodeFailedBinding
-	}
-
-	if config.List {
-		return cmdList(config)
+func Main(opts *CmdArgs) ErrorCode {
+	if opts.List != "" {
+		return cmdList(opts)
 	}
 
 	// 引数未指定の時は ponponpain が自動的に設定される
-	if config.Word == "" {
-		config.Word = "ponponpain"
-		config.Words = []string{"haraita-i"}
+	if len(opts.Args) < 2 {
+		opts.Args = []string{"ponponpain", "haraita-i"}
 	}
 
-	return cmdJoin(config)
+	return cmdJoin(opts)
 }
 
 // cmdJoin は2つの入力を結合し、標準出力に出す。
 // 引数が'-'という指定のときは、その位置に標準入力から受け取った文字列を埋め込む
 // 。'-'指定が存在しないときは標準入力を受け付けない。
-func cmdJoin(config Config) ErrorCode {
-	if err := setStdinToArgs(&config); err != nil {
+func cmdJoin(opts *CmdArgs) ErrorCode {
+	if err := setStdinToArgs(opts); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return errorCodeFailedReadingStdin
 	}
 
 	var word []rune
 	var marks [][]rune
-	for _, orgMark := range config.Words {
+	for _, orgMark := range opts.Args[1:] {
 		// 結合文字に変換可能かチェック
 		mark := []rune(orgMark)
 		if err := unicode.ValidateCombindingCharacterMap(mark); err != nil {
@@ -119,7 +65,7 @@ func cmdJoin(config Config) ErrorCode {
 		// 結合文字に変換
 		mark = unicode.ToCombindingCharacterMap(mark)
 		// 結合先の文字よりも、結合文字が多くてはならない
-		w, m := deleteOverSize([]rune(config.Word), mark)
+		w, m := deleteOverSize([]rune(opts.Args[0]), mark)
 
 		// wordは常に1つのため上書きで良い
 		word = w
@@ -134,29 +80,27 @@ func cmdJoin(config Config) ErrorCode {
 
 // setStdinToArgs は標準入力を受け取る指定があるときだけハイフンの引数の位置に標
 // 準入力を埋め込む。
-func setStdinToArgs(config *Config) error {
-	if hasStdinArgs(*config) {
+func setStdinToArgs(opts *CmdArgs) error {
+	if hasStdinArgs(opts.Args) {
 		stdinStr, err := readStdin()
 		if err != nil {
 			return err
 		}
 		// 受け取った標準入力で上書き
-		if config.Word == "-" {
-			config.Word = stdinStr
+		if opts.Args[0] == "-" {
+			opts.Args[0] = stdinStr
 		}
-		for i := 0; i < len(config.Words); i++ {
-			if config.Words[i] == "-" {
-				config.Words[i] = stdinStr
+		for i := 1; i < len(opts.Args); i++ {
+			if opts.Args[i] == "-" {
+				opts.Args[i] = stdinStr
 			}
 		}
 	}
 	return nil
 }
 
-func hasStdinArgs(config Config) bool {
-	word, words := config.Word, config.Words
-	ws := []string{word}
-	ws = append(ws, words...)
+func hasStdinArgs(args []string) bool {
+	ws := args
 	for _, w := range ws {
 		if w == "-" {
 			return true
@@ -207,19 +151,8 @@ func joinWords(w []rune, m ...[]rune) string {
 	return s
 }
 
-func cmdList(config Config) ErrorCode {
-	var converter map[rune]rune
-	if config.All {
-		converter = unicode.CombindingCharacterMap
-	} else if config.DiacriticalMark {
-		converter = unicode.DiaCriticalMarks
-	} else if config.CyrillicAlphabets {
-		converter = unicode.CyrillicAlphabets
-	} else {
-		// 到達しないはず
-		return errorCodeIllegalConverter
-	}
-
+func cmdList(opts *CmdArgs) ErrorCode {
+	converter := categories[opts.List]
 	for k, v := range converter {
 		w, j := string(k), string(v)
 		s := fmt.Sprintf("%s  %s %d u%.4x", w, j, v, v)
