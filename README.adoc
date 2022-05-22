@@ -35,7 +35,7 @@ _ͩͣͭͤ_ͩͣͭͤ_ͩͣͭͤ_ͩͣͭͤ
 
 [source,bash]
 ----
-go get -u github.com/jiro4989/ponpe
+go install github.com/jiro4989/ponpe@latest
 ----
 
 あるいは
