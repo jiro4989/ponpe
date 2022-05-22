@@ -9,7 +9,7 @@ env:
   app: ponpe
   package_desc: 'ponpe is ponponpain generator'
   release_files: README.* LICENSE
-  goversion: '1.17'
+  goversion: '1.18'
   build_opts: '-ldflags="-s -w -extldflags \"-static\" -X \"main.version=align $(git describe --tags) (rev - $(git rev-parse HEAD))\""'
   maintainer: jiro
 
