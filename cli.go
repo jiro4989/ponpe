@@ -9,8 +9,9 @@ import (
 )
 
 type CmdArgs struct {
-	List string
-	Args []string
+	List    string
+	Version bool
+	Args    []string
 }
 
 var (
@@ -28,6 +29,7 @@ func ParseArgs() (*CmdArgs, error) {
 
 	flag.Usage = flagHelpMessage
 	flag.StringVar(&opts.List, "l", "", "print available alphabets. [all|diacritical_mark|dm|cyrillic_alphabets|ca]")
+	flag.BoolVar(&opts.Version, "v", false, "print version")
 	flag.Parse()
 	opts.Args = flag.Args()
 
@@ -70,6 +72,7 @@ func flagHelpMessage() {
 
   また、使用している文字が特殊な文字であるため、フォントによっては表示されない
   場合があることをご理解ください。`))
+	fmt.Fprintln(os.Stderr, "")
 	fmt.Fprintln(os.Stderr, "Options:")
 
 	flag.PrintDefaults()
