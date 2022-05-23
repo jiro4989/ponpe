@@ -35,7 +35,7 @@ _ͩͣͭͤ_ͩͣͭͤ_ͩͣͭͤ_ͩͣͭͤ
 
 [source,bash]
 ----
-go get -u github.com/jiro4989/ponpe
+go install github.com/jiro4989/ponpe@latest
 ----
 
 あるいは
@@ -45,45 +45,7 @@ https://github.com/jiro4989/ponpe/releases[Releases]からダウンロードし�
 
 == Help
 
-[source,bash]
-----
-ponpe はpͪoͣnⷢpͣoꙶnͭpͣa͡iꙶnを再現するためのアルファベット結合ユーティリティです。
-
-Usage:
-	ponpe [options] <word> <words>...
-	ponpe [-l | --list] (all | diacritical_mark | dm | cyrillic_alphabets | ca)
-	ponpe -h | --help
-	ponpe -v | --version
-
-Examples:
-	ponpe ponponpain haraita-i
-	ponpe abcd dddd aaaa tttt eeee
-	echo abcd | ponpe - date
-	ponpe --list all
-
-Available words:
-	全ての文字が使用可能なわけではありません。文字列の結合が可能かどうかは、入力
-	した文字列に紐づくUnicode結合文字が存在するかどうかで決まります。
-
-	このコマンドはアルファベットと、そのアルファベット類似した形のUnicode結合文
-	字を紐づけることで、アルファベットをUnicode結合文字に変換して結合しています。
-
-	よって、Unicode結合文字側に存在しない（＝マッピングされていない）文字を指定
-	しても結合できません。
-
-	最低限アルファベット小文字はマッピングしてありますが、アルファベット大文字は
-	部分的にしかマッピングしていません。使用可能な文字の一覧については、以下のコ
-	マンドで確認してください。
-
-		ponpe --list all
-
-	また、使用している文字が特殊な文字であるため、フォントによっては表示されない
-	場合があることをご理解ください。
-
-Options:
-	-h --help       このヘルプを出力する。
-	-v --version    バージョン情報を出力する。
-----
+`ponpe -h` を見てください。
 
 == LICENSE
 
