@@ -31,6 +31,11 @@ func main() {
 }
 
 func Main(opts *CmdArgs) ErrorCode {
+	if opts.Version {
+		fmt.Println(Version)
+		return errorCodeOk
+	}
+
 	if opts.List != "" {
 		return cmdList(opts)
 	}

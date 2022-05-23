@@ -21,6 +21,14 @@ func TestMain(t *testing.T) {
 			want: errorCodeOk,
 		},
 		{
+			desc: "正常系: バージョン出力",
+			in: CmdArgs{
+				Args:    []string{},
+				Version: true,
+			},
+			want: errorCodeOk,
+		},
+		{
 			desc: "正常系: aaとddとcc",
 			in: CmdArgs{
 				Args: []string{"aa", "bb", "cc"},
