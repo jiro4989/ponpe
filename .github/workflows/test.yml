@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go: ['1.18', '1.24']
+        go: ['1.18', '1.x']
         os: [windows, linux, darwin]
         arch: [amd64]
     steps:
